@@ -1,0 +1,31 @@
+BMS Group 16 Full App - Run On A New Windows Laptop
+====================================================
+
+1. Extract the ZIP folder.
+2. Open PowerShell inside the extracted folder.
+3. Run this command:
+
+   powershell -ExecutionPolicy Bypass -File .\SETUP_NEW_LAPTOP_RUN_OR_BUILD.ps1
+
+This installs Git, VS Code, Chrome, Flutter, Android SDK tools, and the VS Code Flutter extension.
+After setup, it opens the project in VS Code and runs the app in Chrome.
+
+To build an APK on the new laptop, run:
+
+   powershell -ExecutionPolicy Bypass -File .\SETUP_NEW_LAPTOP_RUN_OR_BUILD.ps1 -Action apk
+
+After the APK build finishes, the file will be created here:
+
+   BMS_Group16_FULL_APP.apk
+
+Fast commands after everything is installed:
+
+   .\RUN_WEB.ps1
+   .\BUILD_APK.ps1
+
+Debug/demo accounts when running with flutter run:
+
+   Admin:   admin@bms.sd / admin123
+   Cashier: cashier@bms.sd / cashier123
+
+Release APK/web builds intentionally require creating the first owner account.
