@@ -297,10 +297,10 @@ class AppStrings {
       'over_credit_limit': 'تجاوز حد الائتمان',
     },
     'en': {
-      'app_title': 'Retail Billing System',
+      'app_title': 'Billing Management System',
       // Login
       'login_title': 'Sign In',
-      'login_subtitle': 'Welcome to Retail Billing System',
+      'login_subtitle': 'Welcome to Billing Management System',
       'email': 'Email',
       'password': 'Password',
       'login_btn': 'Sign In',

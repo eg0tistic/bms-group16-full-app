@@ -27,10 +27,8 @@ import 'screens/setup_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await configureDatabaseFactory();
-  // Evaluation builds keep the convenient sample dataset. Production builds
-  // never ship a known administrator password: the owner creates the first
-  // account through the setup screen instead.
-  if (kDebugMode) await DemoData.seed();
+  const demoMode = bool.fromEnvironment('DEMO_MODE');
+  if (kDebugMode || demoMode) await DemoData.seed();
   final needsSetup = (await DatabaseHelper.instance.getAllUsers(
     activeOnly: false,
   )).isEmpty;

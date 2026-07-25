@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "Group 16 - Future University Sudan" "\0"
-            VALUE "FileDescription", "Retail Billing System" "\0"
+            VALUE "FileDescription", "Billing Management System" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "group16_bms" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 Group 16. All rights reserved." "\0"
             VALUE "OriginalFilename", "group16_bms.exe" "\0"
-            VALUE "ProductName", "Retail Billing System" "\0"
+            VALUE "ProductName", "Billing Management System" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

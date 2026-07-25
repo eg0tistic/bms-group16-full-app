@@ -12,7 +12,7 @@ Status as of 2026-07-19. "Verified" below means the claim was reproduced with a 
 ## Android (defense/demo target)
 
 - Debug APK builds are verified. Release signing now requires the owner's private key via `android/key.properties`; the code no longer signs release artifacts with the public debug key.
-- Package `com.group16.bms`, launcher label localized (نظام الفوترة / Retail Billing System), branded launcher icon.
+- Package `com.group16.bms`, launcher label localized (نظام الفوترة / Billing Management System), branded launcher icon.
 - Minimum Android version: **API 24 (Android 7.0)** — this is the minimum supported by the current Flutter toolchain. Note: earlier project documents said API 21; the report must state API 24.
 - `AndroidManifest.xml` includes the package-visibility `<queries>` entries required on Android 11+ for WhatsApp (`https`) and SMS links.
 - Verified interactively on an Android 14 / API 34 emulator: launch, seeded login, Arabic RTL dashboard, KPI layout, navigation, and responsive reports. Verification on the physical defense phone is still required for WhatsApp handoff, PDF printing, and device-specific permissions.

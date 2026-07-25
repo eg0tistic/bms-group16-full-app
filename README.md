@@ -1,7 +1,7 @@
-# نظام الفوترة — Retail Billing Management System
+# نظام الفوترة — Billing Management System
 
 Graduation project (Group 16), Faculty of Information Technology, Future University Sudan.
-An offline-first billing management system for small Sudanese retail and service businesses.
+An offline-first billing management system for small Sudanese service-based businesses.
 
 ## The problem
 

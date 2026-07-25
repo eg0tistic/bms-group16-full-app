@@ -1278,7 +1278,7 @@ class _InvoiceDetailScreenState extends State<_InvoiceDetailScreen> {
     final rawName = values[0];
     final storeName = (rawName != null && rawName.isNotEmpty)
         ? rawName
-        : 'Retail Billing System';
+        : 'Billing Management System';
     return PdfService.generate(
       invoice: _invoice,
       items: _items,
