@@ -6,7 +6,7 @@ Status as of 2026-07-19. "Verified" below means the claim was reproduced with a 
 
 - Primary development and QA platform.
 - Previous release build verification succeeded. Debug builds seed demo data; release builds now open a secure first-run owner setup.
-- Full workflow exercised throughout development: login, dashboard, customers, products, invoices, payments, cash drawer, reports, chatbot, settings, Arabic/English switching.
+- Full workflow exercised throughout development: login, dashboard, customers, products, invoices, payments, reports, settings, utility payments, Arabic/English switching.
 - Uses `sqflite_common_ffi` (bundled SQLite, no system dependency).
 
 ## Android (defense/demo target)

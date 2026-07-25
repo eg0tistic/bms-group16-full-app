@@ -59,19 +59,9 @@ class AppDrawer extends StatelessWidget {
                       route: '/reports',
                     ),
                   _NavItem(
-                    icon: Icons.point_of_sale_outlined,
-                    label: s('nav_cash_drawer'),
-                    route: '/cash_drawer',
-                  ),
-                  _NavItem(
                     icon: Icons.electric_bolt_outlined,
                     label: s('nav_utility_bills'),
                     route: '/utility_bills',
-                  ),
-                  _NavItem(
-                    icon: Icons.smart_toy_outlined,
-                    label: s('nav_chatbot'),
-                    route: '/chatbot',
                   ),
                   _NavItem(
                     icon: Icons.settings_outlined,

@@ -6,7 +6,6 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../models/app_user.dart';
-import '../models/cash_drawer_session.dart';
 import '../models/customer.dart';
 import '../models/invoice.dart';
 import '../models/payment.dart';
@@ -142,7 +141,7 @@ class DatabaseHelper {
       await _createIndexes(db);
     }
     if (oldVersion < 3) {
-      // Phase 3: multi-currency, credit/بالآجل due dates, cash drawer.
+      // Phase 3: multi-currency and credit/بالآجل due dates.
       await db.execute(
         "ALTER TABLE invoices ADD COLUMN currency TEXT NOT NULL DEFAULT 'SDG'",
       );
@@ -150,7 +149,6 @@ class DatabaseHelper {
       await db.execute(
         'ALTER TABLE customers ADD COLUMN credit_limit REAL NOT NULL DEFAULT 0',
       );
-      await db.execute(_cashDrawerTableSql);
     }
     if (oldVersion < 4) {
       // Utility bill payments: a real local ledger of bills the shop paid on
@@ -280,31 +278,11 @@ class DatabaseHelper {
       created_at  TEXT
     )''');
 
-    await db.execute(_cashDrawerTableSql);
     await db.execute(_utilityPaymentsTableSql);
     await db.execute(_auditLogsTableSql);
 
     await _createIndexes(db);
   }
-
-  // Shared by onCreate (fresh installs) and onUpgrade (v2 → v3) so the two
-  // paths can never drift.
-  static const _cashDrawerTableSql = '''CREATE TABLE cash_drawer_sessions (
-      id              INTEGER PRIMARY KEY AUTOINCREMENT,
-      opened_by       INTEGER NOT NULL,
-      opening_balance REAL NOT NULL DEFAULT 0,
-      expected_cash   REAL DEFAULT 0,
-      closing_balance REAL,
-      variance        REAL,
-      status          TEXT NOT NULL DEFAULT 'Open',
-      opened_at       TEXT NOT NULL,
-      closed_at       TEXT,
-      notes           TEXT,
-      is_synced       INTEGER DEFAULT 0,
-      remote_id       TEXT,
-      created_at      TEXT,
-      FOREIGN KEY (opened_by) REFERENCES users(id)
-    )''';
 
   // Shared by onCreate (fresh installs) and onUpgrade (v3 → v4) so the two
   // paths can never drift. A real local ledger of utility bills (electricity,
@@ -1224,87 +1202,6 @@ class DatabaseHelper {
     );
   }
 
-  // ─── Cash Drawer ──────────────────────────────────────────────────
-
-  /// The currently open drawer session, or null if none is open.
-  Future<CashDrawerSession?> getOpenCashDrawer() async {
-    final db = await database;
-    final rows = await db.query(
-      'cash_drawer_sessions',
-      where: "status = 'Open'",
-      orderBy: 'opened_at DESC',
-      limit: 1,
-    );
-    if (rows.isEmpty) return null;
-    return CashDrawerSession.fromMap(rows.first);
-  }
-
-  Future<int> openCashDrawer(int openedBy, double openingBalance) async {
-    final db = await database;
-    return db.insert('cash_drawer_sessions', {
-      'opened_by': openedBy,
-      'opening_balance': openingBalance,
-      'status': 'Open',
-      'opened_at': Fmt.now(),
-      'created_at': Fmt.now(),
-    });
-  }
-
-  /// Total cash payments recorded since [openedAtIso] — the cash that should
-  /// have entered the drawer during the session.
-  Future<double> cashCollectedSince(String openedAtIso) async {
-    final db = await database;
-    final result = await db.rawQuery(
-      "SELECT COALESCE(SUM(amount_paid), 0) AS total FROM payments "
-      "WHERE method = 'Cash' AND reversed_at IS NULL AND created_at >= ?",
-      [openedAtIso],
-    );
-    return (result.first['total'] as num?)?.toDouble() ?? 0;
-  }
-
-  /// Closes [session] with the physically counted [closingActual], recording
-  /// the expected total and the variance (counted − expected). Runs in a
-  /// transaction so a payment recorded mid-close cannot skew the numbers.
-  Future<void> closeCashDrawer(
-    CashDrawerSession session,
-    double closingActual, {
-    String? notes,
-  }) async {
-    final db = await database;
-    await db.transaction((txn) async {
-      final result = await txn.rawQuery(
-        "SELECT COALESCE(SUM(amount_paid), 0) AS total FROM payments "
-        "WHERE method = 'Cash' AND reversed_at IS NULL AND created_at >= ?",
-        [session.openedAt],
-      );
-      final collected = (result.first['total'] as num?)?.toDouble() ?? 0;
-      final expected = session.openingBalance + collected;
-      await txn.update(
-        'cash_drawer_sessions',
-        {
-          'expected_cash': expected,
-          'closing_balance': closingActual,
-          'variance': closingActual - expected,
-          'status': 'Closed',
-          'closed_at': Fmt.now(),
-          'notes': notes,
-        },
-        where: 'id = ?',
-        whereArgs: [session.id],
-      );
-    });
-  }
-
-  Future<List<CashDrawerSession>> getRecentCashDrawers({int limit = 10}) async {
-    final db = await database;
-    final rows = await db.query(
-      'cash_drawer_sessions',
-      orderBy: 'opened_at DESC',
-      limit: limit,
-    );
-    return rows.map(CashDrawerSession.fromMap).toList();
-  }
-
   // ─── Utility Payments ─────────────────────────────────────────────
   // A manual ledger of utility bills the shop paid on a customer's behalf.
   // No Sudanese electricity, water, or telecom provider exposes a public API
@@ -1742,7 +1639,6 @@ class DatabaseHelper {
         'invoices': await db.query('invoices'),
         'invoice_items': await db.query('invoice_items'),
         'payments': await db.query('payments'),
-        'cash_drawer_sessions': await db.query('cash_drawer_sessions'),
         'utility_payments': await db.query('utility_payments'),
         'settings': safeSettings,
         'audit_logs': await db.query('audit_logs'),

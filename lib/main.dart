@@ -19,10 +19,8 @@ import 'screens/customers_screen.dart';
 import 'screens/products_screen.dart';
 import 'screens/invoices_screen.dart';
 import 'screens/reports_screen.dart';
-import 'screens/chatbot_screen.dart';
 import 'screens/settings_screen.dart';
 import 'screens/utility_bills_screen.dart';
-import 'screens/cash_drawer_screen.dart';
 import 'screens/administration_screen.dart';
 import 'screens/setup_screen.dart';
 
@@ -85,10 +83,8 @@ class BmsApp extends StatelessWidget {
             '/products': (_) => const ProductsScreen(),
             '/invoices': (_) => const InvoicesScreen(),
             '/reports': (_) => const ReportsScreen(),
-            '/chatbot': (_) => const ChatbotScreen(),
             '/settings': (_) => const SettingsScreen(),
             '/utility_bills': (_) => const UtilityBillsScreen(),
-            '/cash_drawer': (_) => const CashDrawerScreen(),
             '/administration': (_) => const AdministrationScreen(),
           },
         );

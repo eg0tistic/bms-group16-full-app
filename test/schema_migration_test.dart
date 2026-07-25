@@ -23,8 +23,8 @@ void main() {
     DatabaseHelper.databasePathOverride = null;
   });
 
-  // Frozen replica of the historical v2 schema (before currency, due_date,
-  // credit_limit and cash_drawer_sessions were added in v3). Do not edit.
+  // Frozen replica of the historical v2 schema before currency, due_date,
+  // and credit_limit were added in v3. Do not edit.
   Future<void> createV2Schema(Database db) async {
     await db.execute('''CREATE TABLE users (
       id            INTEGER PRIMARY KEY AUTOINCREMENT,

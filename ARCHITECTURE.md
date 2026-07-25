@@ -22,7 +22,7 @@ User action
 
 1. `lib/screens` and `lib/widgets`: user workflows and reusable presentation components.
 2. `lib/providers`: the small amount of app-wide state: signed-in user and language.
-3. `lib/services`: PDF, sharing, backup, optional sync, and the offline rule-based assistant.
+3. `lib/services`: PDF, sharing, backup, and optional sync.
 4. `lib/data` and `lib/models`: SQLite access, business transactions, validation-ready records, and platform-specific database factories.
 
 The large invoice screen is kept as one workflow file because the form state, calculations, validation, and save sequence change together. Shared theme, responsive layout, database access, and integrations are already extracted, which removes duplication without introducing a framework that would make the project harder to explain.
@@ -47,7 +47,7 @@ Screens contain no platform branches. That is why the same feature code runs on 
 - SDG and USD totals remain separate; unlike currencies are never added together.
 - Confirming, paying, reversing, or voiding records updates related balances transactionally.
 - Passwords use salted PBKDF2-HMAC-SHA256; release builds do not seed demo credentials.
-- Admin-only reporting is enforced in both navigation and assistant responses.
+- Admin-only reporting is enforced in navigation and screen access.
 
 ## Verification snapshot
 

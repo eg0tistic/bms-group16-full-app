@@ -20,10 +20,9 @@
 8. Record a partial payment — pick **Bankak** as the method and enter a transaction reference. Show it in the payment history.
 9. Open the invoice PDF — point out full Arabic layout.
 10. Share via WhatsApp (disable airplane mode first) — the message includes amount, status, and due date.
-11. Open the cash drawer screen: open with a float, show live expected cash, close and show the variance.
-12. Reports (admin only), then ask the chatbot "كم دخل اليوم؟" — point out the "rule-based assistant" badge.
-13. Utility bills: record a real electricity bill payment (provider, meter number, bill amount, small service fee), generate the receipt, and explain the honest explainer banner — this is a manual ledger for a workflow shops already do, not a live provider connection (no Sudanese utility exposes a public API).
-14. Show the SudaPass button on the login screen and explain the integration plan.
+11. Reports (admin only): show revenue, receivables, invoice status, top customers, and top products.
+12. Utility bills: record a real electricity bill payment (provider, meter number, bill amount, small service fee), generate the receipt, and explain the honest explainer banner — this is a manual ledger for a workflow shops already do, not a live provider connection (no Sudanese utility exposes a public API).
+13. Show the SudaPass button on the login screen and explain the integration plan.
 
 ## Honest answers for likely committee questions
 
@@ -32,12 +31,11 @@
 - **"Why no real Bankak/payment API?"** No public payment APIs exist in Sudan; integration requires an EBS-licensed partnership. The app mirrors the real manual workflow: recording the payment method and transaction reference. This is documented, with SudaPass/EBS integration as future work.
 - **"What Android versions?"** Android 7.0 (API 24) and above — the minimum supported by the current Flutter toolchain.
 - **"What about the USD currency option?"** Invoices can be issued and settled in USD, but the customer receivables ledger is deliberately SDG-only so amounts in different currencies are never mixed. A per-currency ledger is future work.
-- **"Is the chatbot AI?"** No — it is an offline rule-based keyword assistant (the badge in the app says so). An online AI mode would route through a backend proxy; API keys are never embedded in the app.
 - **"Are the utility bill payments a live provider connection?"** No, and none can be — research confirmed no Sudanese electricity, water, or telecom provider exposes a public API (everything routes through the closed EBS bank switch). The screen is a real manual ledger instead: the shop records bills it paid to the provider on the customer's behalf (the actual workflow shops already use), with a printable receipt and WhatsApp sharing. This is documented as the honest, defensible alternative to a fake integration.
 
 ## One-minute architecture answer
 
-The screens collect input and show state. `AppProvider` holds the signed-in user and language. Services own focused integrations such as PDFs, sharing, sync, and the rule-based assistant. `DatabaseHelper` is the single local data gateway and applies billing rules inside SQLite transactions. Android and desktop use native SQLite; web swaps only the database factory for WebAssembly SQLite in IndexedDB. Every business workflow remains local first, while optional cloud sync pushes queued changes later.
+The screens collect input and show state. `AppProvider` holds the signed-in user and language. Services own focused integrations such as PDFs, sharing, and sync. `DatabaseHelper` is the single local data gateway and applies billing rules inside SQLite transactions. Android and desktop use native SQLite; web swaps only the database factory for WebAssembly SQLite in IndexedDB. Every business workflow remains local first, while optional cloud sync pushes queued changes later.
 
 ## If something goes wrong live
 

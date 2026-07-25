@@ -389,47 +389,6 @@ void main() {
     expect((await db.getReportSummary(currency: 'USD'))['total_revenue'], 10);
   });
 
-  test('cash drawer close computes expected and variance', () async {
-    final db = DatabaseHelper.instance;
-    final customerId = await seedUserAndCustomer(db);
-
-    // Open a drawer with a 500 float.
-    await db.openCashDrawer(1, 500.0);
-    final session = await db.getOpenCashDrawer();
-    expect(session, isNotNull);
-
-    // A 100 cash sale is collected during the session.
-    final invId = await db.insertInvoiceWithItemsAndBalance(
-      {...invoiceMap(customerId), 'status': 'Confirmed'},
-      [item],
-      customerId,
-      100.0,
-    );
-    await db.insertPaymentAndSettle(
-      Payment(
-        invoiceId: invId,
-        amountPaid: 100.0,
-        paymentDate: Fmt.now(),
-        method: 'Cash',
-        createdAt: Fmt.now(),
-      ),
-      customerId,
-      invId,
-      100.0,
-    );
-
-    // Expected = 500 float + 100 cash = 600. Count 590 → 10 short.
-    await db.closeCashDrawer(session!, 590.0);
-
-    final recent = await db.getRecentCashDrawers();
-    expect(recent.first.status, 'Closed');
-    expect(recent.first.expectedCash, 600.0);
-    expect(recent.first.closingBalance, 590.0);
-    expect(recent.first.variance, -10.0);
-    // No session should be open anymore.
-    expect(await db.getOpenCashDrawer(), isNull);
-  });
-
   test(
     'utility payment is recorded and its service fee counted in reports',
     () async {
